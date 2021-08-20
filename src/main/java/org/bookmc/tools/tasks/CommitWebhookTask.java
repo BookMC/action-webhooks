@@ -8,6 +8,8 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 
+import java.time.Instant;
+
 public class CommitWebhookTask extends DefaultTask {
     @Input
     private String webhook;
@@ -34,8 +36,9 @@ public class CommitWebhookTask extends DefaultTask {
         WebhookEmbedBuilder builder = new WebhookEmbedBuilder()
             .setColor(5549140)
             .setTitle(new WebhookEmbed.EmbedTitle("A new toolchain update has been released!", null))
-            .setDescription("A new version of " + getProjectName() + " is now out! Check it out at " + getProjectGithub() + ". The latest version of " + getProjectName() + " is now " + getProjectVersion());
-
+            .setDescription("A new version of `" + getProjectName() + "` is now out! Check it out at " + getProjectGithub() + ". The latest version of `" + getProjectName() + "` is now `" + getProjectVersion() + "`")
+            .setFooter(new WebhookEmbed.EmbedFooter("Powered by BuildTools", getAvatarUrl()))
+            .setTimestamp(Instant.now());
         WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder()
             .setUsername(getUsername())
             .setAvatarUrl(getAvatarUrl())
