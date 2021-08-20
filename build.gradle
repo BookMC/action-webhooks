@@ -1,5 +1,4 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
     id "java"
     id "java-gradle-plugin"
     id "maven-publish"
@@ -22,7 +21,7 @@ java {
 }
 
 group = "org.bookmc"
-version = "0.1.2+${buildNumber ? "build.$buildNumber" : "local"}"
+version = "0.2.0+${buildNumber ? "build.$buildNumber" : "local"}"
 
 gradlePlugin {
     plugins {
@@ -33,24 +32,9 @@ gradlePlugin {
     }
 }
 
-configurations {
-    include
-    implementation.extendsFrom(include)
-}
-
 dependencies {
-    include "club.minnced:discord-webhooks:0.5.8"
-
     implementation gradleApi()
 }
-
-shadowJar {
-    archiveClassifier.set("")
-    configurations = [project.configurations.include]
-    duplicatesStrategy DuplicatesStrategy.EXCLUDE
-}
-
-tasks.build.dependsOn(tasks.shadowJar)
 
 publishing {
     repositories {
