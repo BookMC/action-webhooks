@@ -14,8 +14,14 @@ ext {
     local = buildNumber == null
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}
+
 group = "org.bookmc"
-version = "0.1.0+${buildNumber ? "build.$buildNumber" : "local"}"
+version = "0.1.1+${buildNumber ? "build.$buildNumber" : "local"}"
 
 gradlePlugin {
     plugins {
