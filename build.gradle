@@ -25,9 +25,9 @@ version = "0.2.0+${buildNumber ? "build.$buildNumber" : "local"}"
 
 gradlePlugin {
     plugins {
-        buildWebhooks {
-            id = "org.bookmc.build-webhooks"
-            implementationClass = "org.bookmc.build.BuildWebhooks"
+        buildtools {
+            id = "org.bookmc.buildtools"
+            implementationClass = "org.bookmc.tools.BuildTools"
         }
     }
 }
