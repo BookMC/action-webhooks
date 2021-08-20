@@ -1,17 +1,12 @@
 package org.bookmc.tools.tasks;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
+import club.minnced.discord.webhook.WebhookClient;
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
+import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 public class CommitWebhookTask extends DefaultTask {
     @Input
@@ -33,37 +28,20 @@ public class CommitWebhookTask extends DefaultTask {
     private String avatarUrl;
 
     @TaskAction
-    public void run() throws IOException {
-        JsonObject object = new JsonObject();
-        object.addProperty("username", getUsername());
-        object.addProperty("avatar_url", getAvatarUrl());
-        object.add("content", JsonNull.INSTANCE);
+    public void run() {
+        WebhookClient client = WebhookClient.withUrl(getWebhook());
 
-        JsonArray embeds = new JsonArray();
-        JsonObject embed = new JsonObject();
-        embed.addProperty("color", 5549140);
-        embed.addProperty("title", "A new toolchain update has been released!");
-        embed.addProperty("description", "A new version of " + getProjectName() + " is now out! Check it out at " + getProjectGithub() + ". The latest version of " + getProjectName() + " is now " + getProjectVersion());
-        embeds.add(embed);
+        WebhookEmbedBuilder builder = new WebhookEmbedBuilder()
+            .setColor(5549140)
+            .setTitle(new WebhookEmbed.EmbedTitle("A new toolchain update has been released!", null))
+            .setDescription("A new version of " + getProjectName() + " is now out! Check it out at " + getProjectGithub() + ". The latest version of " + getProjectName() + " is now " + getProjectVersion());
 
-        object.add("embeds", embeds);
+        WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder()
+            .setUsername(getUsername())
+            .setAvatarUrl(getAvatarUrl())
+            .addEmbeds(builder.build());
 
-        byte[] postData = object.toString().getBytes(StandardCharsets.UTF_8);
-        int postDataLength = postData.length;
-
-        URL url = new URL(getWebhook());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setDoOutput(true);
-        conn.setInstanceFollowRedirects(false);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("charset", "utf-8");
-        conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-        conn.setUseCaches(false);
-
-        try (DataOutputStream daos = new DataOutputStream(conn.getOutputStream())) {
-            daos.write(postData);
-        }
+        client.send(messageBuilder.build());
     }
 
     public String getWebhook() {
