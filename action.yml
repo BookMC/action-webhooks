@@ -1,0 +1,5 @@
+name: 'action-webhooks'
+description: 'A custom organization-based action to push webhooks when there are new releases of toolchains and more!'
+runs:
+  using: 'node12'
+  main: 'src/main.js'
