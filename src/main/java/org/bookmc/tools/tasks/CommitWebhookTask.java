@@ -1,11 +1,11 @@
 package org.bookmc.tools.tasks;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.internal.impldep.com.google.gson.JsonArray;
-import org.gradle.internal.impldep.com.google.gson.JsonNull;
-import org.gradle.internal.impldep.com.google.gson.JsonObject;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

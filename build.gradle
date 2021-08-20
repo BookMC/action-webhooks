@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "java-gradle-plugin"
     id "maven-publish"
+    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
 repositories {
@@ -21,7 +22,7 @@ java {
 }
 
 group = "org.bookmc"
-version = "0.2.0+${buildNumber ? "build.$buildNumber" : "local"}"
+version = "0.3.0+${buildNumber ? "build.$buildNumber" : "local"}"
 
 gradlePlugin {
     plugins {
@@ -32,8 +33,21 @@ gradlePlugin {
     }
 }
 
+configurations {
+    include
+    implementation.extendsFrom(include)
+}
+
 dependencies {
     implementation gradleApi()
+
+    include "com.google.code.gson:gson:2.8.8"
+}
+
+shadowJar {
+    archiveClassifier.set("")
+    configurations = [project.configurations.include]
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
 }
 
 publishing {
