@@ -10,7 +10,7 @@ public class BuildTools implements Plugin<Project> {
     @Override
     public void apply(@Nonnull Project project) {
         project.getTasks().register("commitWebhook", CommitWebhookTask.class, task -> {
-            task.setWebhook(System.getenv("DISCORD_WEBHOOK"));
+            task.setWebhook(System.getenv("WEBHOOK_URL"));
             task.setProjectGithub("https://github.com/BookMC/" + project.getName());
             task.setProjectVersion(project.getVersion().toString());
             task.setProjectName(project.getName());
