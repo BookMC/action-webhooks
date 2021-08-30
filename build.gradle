@@ -3,7 +3,7 @@ plugins {
     id "java-gradle-plugin"
     id "maven-publish"
     id "com.github.johnrengelman.shadow" version "7.0.0"
-    id "org.bookmc.buildtools" version "0.3.6+build.21"
+    id "org.bookmc.buildtools" version "0.3.6+build.24"
 }
 
 repositories {
