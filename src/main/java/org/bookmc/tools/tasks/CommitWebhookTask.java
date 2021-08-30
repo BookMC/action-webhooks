@@ -2,6 +2,7 @@ package org.bookmc.tools.tasks;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.workers.WorkerExecutor;
 
@@ -31,6 +32,7 @@ public abstract class CommitWebhookTask extends DefaultTask {
     private String commitMessage = null;
 
     @Input
+    @Optional
     private Color color;
 
     @Inject

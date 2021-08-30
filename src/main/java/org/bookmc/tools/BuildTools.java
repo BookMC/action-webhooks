@@ -12,6 +12,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -34,6 +35,8 @@ public class BuildTools implements Plugin<Project> {
 
             task.setUsername(env.getOrDefault("WEBHOOK_NAME", "BookMC Toolchain"));
             task.setAvatarURL(env.getOrDefault("WEBHOOK_PROFILE_PICTURE", "https://avatars.githubusercontent.com/u/84095356?s=200&v=4"));
+
+            task.setColor(new Color(5549140));
 
             try {
                 CommitData data = getCommitMessage(Git.open(project.getProjectDir()));
