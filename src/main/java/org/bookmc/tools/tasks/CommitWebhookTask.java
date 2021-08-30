@@ -1,16 +1,14 @@
 package org.bookmc.tools.tasks;
 
-import club.minnced.discord.webhook.WebhookClient;
-import club.minnced.discord.webhook.send.WebhookEmbed;
-import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.workers.WorkerExecutor;
 
-import java.time.Instant;
+import javax.inject.Inject;
+import java.awt.*;
 
-public class CommitWebhookTask extends DefaultTask {
+public abstract class CommitWebhookTask extends DefaultTask {
     @Input
     private String webhook;
 
@@ -27,24 +25,31 @@ public class CommitWebhookTask extends DefaultTask {
     private String username;
 
     @Input
-    private String avatarUrl;
+    private String avatarURL;
 
+    @Input
+    private String commitMessage = null;
+
+    @Input
+    private Color color;
+
+    @Inject
+    abstract WorkerExecutor getWorkerExecutor();
+    
     @TaskAction
     public void run() {
-        WebhookClient client = WebhookClient.withUrl(getWebhook());
-
-        WebhookEmbedBuilder builder = new WebhookEmbedBuilder()
-            .setColor(5549140)
-            .setTitle(new WebhookEmbed.EmbedTitle("A new toolchain update has been released!", null))
-            .setDescription("A new version of `" + getProjectName() + "` is now out! Check it out at " + getProjectGithub() + ". The latest version of `" + getProjectName() + "` is now `" + getProjectVersion() + "`")
-            .setFooter(new WebhookEmbed.EmbedFooter("Powered by BuildTools", getAvatarUrl()))
-            .setTimestamp(Instant.now());
-        WebhookMessageBuilder messageBuilder = new WebhookMessageBuilder()
-            .setUsername(getUsername())
-            .setAvatarUrl(getAvatarUrl())
-            .addEmbeds(builder.build());
-
-        client.send(messageBuilder.build());
+        getWorkerExecutor().noIsolation().submit(CommitWebhookAction.class, parameters -> {
+            parameters.getWebhookURL().set(webhook);
+            parameters.getProjectName().set(projectName);
+            parameters.getProjectVersion().set(projectVersion);
+            parameters.getProjectGithub().set(projectGithub);
+            parameters.getUsername().set(username);
+            parameters.getAvatarURL().set(avatarURL);
+            if (commitMessage.isEmpty()) {
+                parameters.getCommitMessage().set(commitMessage);
+            }
+            parameters.getEmbedColor().set(color);
+        });
     }
 
     public String getWebhook() {
@@ -87,11 +92,27 @@ public class CommitWebhookTask extends DefaultTask {
         this.username = username;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getAvatarURL() {
+        return avatarURL;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setAvatarURL(String avatarURL) {
+        this.avatarURL = avatarURL;
+    }
+
+    public String getCommitMessage() {
+        return commitMessage;
+    }
+
+    public void setCommitMessage(String commitMessage) {
+        this.commitMessage = commitMessage;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Color getColor() {
+        return color;
     }
 }
