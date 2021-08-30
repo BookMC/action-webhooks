@@ -34,7 +34,7 @@ public abstract class CommitWebhookTask extends DefaultTask {
     private Color color;
 
     @Inject
-    abstract WorkerExecutor getWorkerExecutor();
+    public abstract WorkerExecutor getWorkerExecutor();
     
     @TaskAction
     public void run() {
