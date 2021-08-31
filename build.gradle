@@ -23,7 +23,7 @@ java {
 }
 
 group = "org.bookmc"
-version = "0.3.6+${buildNumber ? "build.$buildNumber" : "local"}"
+version = "0.3.7+${buildNumber ? "build.$buildNumber" : "local"}"
 
 gradlePlugin {
     plugins {

@@ -23,12 +23,7 @@ public class BuildTools implements Plugin<Project> {
         Map<String, String> env = System.getenv();
 
         project.getTasks().register("commitWebhook", CommitWebhookTask.class, task -> {
-            String webhookUrl = env.get("WEBHOOK_URL");
-            if (webhookUrl == null) {
-                throw new IllegalStateException("You must specify a Discord Webhook URL for the WEBHOOK_URL environment variable");
-            }
-
-            task.setWebhook(webhookUrl);
+            task.setWebhook(env.get("WEBHOOK_URL"));
             task.setProjectGithub(env.getOrDefault("ORGANIZATION_URL", "https://github.com/BookMC") + "/" + project.getName());
             task.setProjectVersion(project.getVersion().toString());
             task.setProjectName(project.getName());

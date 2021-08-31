@@ -29,7 +29,8 @@ public abstract class CommitWebhookTask extends DefaultTask {
     private String avatarURL;
 
     @Input
-    private String commitMessage = null;
+    @Optional
+    private String commitMessage;
 
     @Input
     @Optional
@@ -37,7 +38,7 @@ public abstract class CommitWebhookTask extends DefaultTask {
 
     @Inject
     public abstract WorkerExecutor getWorkerExecutor();
-    
+
     @TaskAction
     public void run() {
         getWorkerExecutor().noIsolation().submit(CommitWebhookAction.class, parameters -> {
@@ -47,9 +48,7 @@ public abstract class CommitWebhookTask extends DefaultTask {
             parameters.getProjectGithub().set(projectGithub);
             parameters.getUsername().set(username);
             parameters.getAvatarURL().set(avatarURL);
-            if (commitMessage.isEmpty()) {
-                parameters.getCommitMessage().set(commitMessage);
-            }
+            parameters.getCommitMessage().set(commitMessage);
             parameters.getEmbedColor().set(color);
         });
     }
