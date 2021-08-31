@@ -26,7 +26,7 @@ public abstract class CommitWebhookAction implements WorkAction<CommitWebhookPar
         String description = "A new version of `" + projectName + "` is now out! Check it out at " + projectGithub + ". The latest version of `" + projectName + "` is now `" + projectVersion + "`";
 
         if (commitMessage != null) {
-            description += "\nLatest Commit: `" + commitMessage + "`";
+            description += "\n\nLatest Commit: " + commitMessage;
         }
 
         WebhookEmbedBuilder builder = new WebhookEmbedBuilder()
